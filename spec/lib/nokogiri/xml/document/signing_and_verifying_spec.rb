@@ -35,6 +35,7 @@ describe "signing and verifying signatures:" do
     end
 
     it 'should produce a signed document' do
+      puts subject.to_s
       subject.to_s.should == fixture('sign3-result.xml')
     end
 

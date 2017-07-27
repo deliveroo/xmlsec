@@ -121,4 +121,5 @@ functionality, and no one has sent a pull request. (Hint, hint!)
 5. Create new Pull Request
 
 gem build nokogiri-xmlsec.gemspec
+gem uninstall nokogiri-xmlsec -a
 gem install nokogiri-xmlsec-0.0.5.gem

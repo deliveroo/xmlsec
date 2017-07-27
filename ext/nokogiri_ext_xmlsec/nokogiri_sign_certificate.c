@@ -64,9 +64,15 @@ VALUE sign_with_certificate(VALUE self, VALUE rb_key_name, VALUE rb_rsa_key, VAL
     goto done;
   }
 
-  x509SerialNode = xmlSecTmplX509DataAddIssuerSerial(x509Node);
-  xmlSecTmplX509IssuerSerialAddIssuerName(x509SerialNode, "CN=Gandi Standard SSL CA 2,O=Gandi,L=Paris,ST=Paris,C=FR");
-  xmlSecTmplX509IssuerSerialAddSerialNumber(x509SerialNode, "180768426381044633091722485386902989652");
+  if(xmlSecTmplX509DataAddIssuerSerial(x509Node) < 0) {
+    rb_raise(rb_eSigningError, "failed to set key name");
+    goto done;
+  }
+
+  if(xmlSecTmplX509DataAddCertificate(x509Node) < 0) {
+    rb_raise(rb_eSigningError, "failed to set key name");
+    goto done;
+  }
 
   // create signature context, we don't need keys manager in this example
   dsigCtx = xmlSecDSigCtxCreate(NULL);
@@ -86,7 +92,7 @@ VALUE sign_with_certificate(VALUE self, VALUE rb_key_name, VALUE rb_rsa_key, VAL
     rb_raise(rb_eSigningError, "failed to load private key");
     goto done;
   }
-  
+
   // load certificate and add to the key
   if(xmlSecCryptoAppKeyCertLoadMemory(dsigCtx->signKey,
                                       (xmlSecByte *)certificate,
